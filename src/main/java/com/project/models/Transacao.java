@@ -26,4 +26,13 @@ public class Transacao {
 
     @Enumerated(EnumType.STRING)
     private TipoTransacao tipo;
+
+    @ManyToOne
+    @JoinColumn(name = "conta_id", nullable = false)
+    private Conta conta;
+
+    @ManyToOne
+    @JoinColumn(name = "categoria_id", nullable = false)
+    private Categoria categoria;
+
 }
