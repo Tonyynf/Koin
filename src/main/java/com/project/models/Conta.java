@@ -18,5 +18,5 @@ public class Conta {
     private String nome;
 
     @Column(nullable = false)
-    private BigDecimal saldoIncial;
+    private BigDecimal saldoInicial;
 }
