@@ -2,10 +2,12 @@ package com.project.services;
 
 import com.project.models.Conta;
 import com.project.models.TipoTransacao;
+import com.project.models.Transacao;
 import com.project.repositories.ContaRepository;
 import com.project.repositories.TransacaoRepository;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class TransacaoService {
@@ -18,6 +20,9 @@ public class TransacaoService {
         this.transacaoRepository = transacaoRepository;
     }
 
+    public List<Transacao> buscarTransacoes(){
+        return transacaoRepository.findAll();
+    }
     public BigDecimal CalcularValorReal(Long contaId){
         Conta conta = contaRepository.findById(contaId).orElseThrow();
 

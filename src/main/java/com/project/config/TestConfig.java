@@ -20,7 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
-@Configuration
+//@Configuration comentada para ser ignorada quando executar o KoinApplication
 public class TestConfig {
     @Bean
     public CommandLineRunner run(CategoriaRepository catRepo,

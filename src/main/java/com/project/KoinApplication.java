@@ -22,14 +22,24 @@ public class KoinApplication {
 	@Bean
 	public CommandLineRunner demo(ContaRepository contaRepo,
 								  TransacaoRepository transacaoRepo,
-								  TransacaoService service){
+								  TransacaoService service,
+								  CategoriaRepository catRepo){
 		return args -> {
 			Conta minhaConta = new Conta(null, "Carteira", new BigDecimal("100.00"));
 			contaRepo.save(minhaConta);
 
-			Transacao r1 = new Transacao(null, "Salário", new BigDecimal("50.00"), LocalDateTime.now(), TipoTransacao.RECEITA, minhaConta, null);
+			//Categoria catGeral = new Categoria(null, "Geral",new BigDecimal("1000.00") ,"#000");
+			Categoria catGeral = new Categoria();
+			catGeral.setConta("Geral"); // Nome da categoria
+			catGeral.setLimiteMensal(new BigDecimal("1000.00"));
+			catGeral.setCorHex("#000");
+			catRepo.save(catGeral);
 
-			Transacao d1 = new Transacao(null, "Hamburguer", new BigDecimal("20.00"), LocalDateTime.now(), TipoTransacao.DESPESA, minhaConta, null);
+			Transacao r1 = new Transacao(null, "Salário", new BigDecimal("50.00"), LocalDateTime.now(), TipoTransacao.RECEITA, minhaConta, catGeral);
+			transacaoRepo.save(r1);
+
+			Transacao d1 = new Transacao(null, "Hamburguer", new BigDecimal("20.00"), LocalDateTime.now(), TipoTransacao.DESPESA, minhaConta, catGeral);
+			transacaoRepo.save(d1);
 
 			BigDecimal saldoFinal = service.CalcularValorReal(minhaConta.getId());
 
