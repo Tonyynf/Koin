@@ -35,4 +35,14 @@ public class TransacaoService {
 
         return conta.getSaldoInicial().add(totalEntradas).subtract(totalSaidas);
     }
+
+    public List<Transacao> buscaPorConta(Long contaId) {
+        return transacaoRepository.findByContaId(contaId);
+    }
+
+    public List<Transacao> buscaPorCategoria(Long categoriaId){
+        return transacaoRepository.findByCategoriaId(categoriaId);
+    }
+
+
 }

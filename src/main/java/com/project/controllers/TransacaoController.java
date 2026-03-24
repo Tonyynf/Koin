@@ -70,4 +70,15 @@ public class TransacaoController {
         return transacaoService.buscarTransacoes();
     }
 
+    @GetMapping("/conta/{contaId}")
+    public ResponseEntity<List<Transacao>> buscarPorConta(@PathVariable Long contaId){
+        List<Transacao> transacoes = transacaoRepo.findByContaId(contaId);
+        return ResponseEntity.ok(transacoes);
+    }
+
+    @GetMapping("/categoria/{categoriaId}")
+    public ResponseEntity<List<Transacao>> buscarPorCategoria(@PathVariable Long categoriaId){
+        List<Transacao> transacoes = transacaoRepo.findByContaId(categoriaId);
+        return ResponseEntity.ok(transacoes);
+    }
 }
