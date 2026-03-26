@@ -44,5 +44,15 @@ public class TransacaoService {
         return transacaoRepository.findByCategoriaId(categoriaId);
     }
 
+    public List<Transacao> listarTransacoesPorData(Long contaId){
+        return transacaoRepository.findByContaIdAndOrderByDataDesc(contaId);
+    }
 
+    public List<Transacao> listarTransacoesPorCategoriaEValor(Long contaId, Long categoriaId) {
+        return transacaoRepository.findByContaIdAndCategoriaIdOrderByValorDesc(contaId, categoriaId);
+    }
+
+    public List<Transacao> listarTransacoesValorEspecifico(Long contaId, BigDecimal valor){
+        return transacaoRepository.findByContaIdAndValorGreaterThanEqual(contaId, valor);
+    }
 }

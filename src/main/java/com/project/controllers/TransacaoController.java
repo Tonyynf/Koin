@@ -81,4 +81,21 @@ public class TransacaoController {
         List<Transacao> transacoes = transacaoRepo.findByContaId(categoriaId);
         return ResponseEntity.ok(transacoes);
     }
+
+    @GetMapping("/conta/{contaId}")
+    public ResponseEntity<List<Transacao>> listarTransacoesPorData(@PathVariable Long contaId){
+        List<Transacao> transacoes = transacaoRepo.findByContaIdAndOrderByDataDesc(contaId);
+        return ResponseEntity.ok(transacoes);
+    }
+    @GetMapping("/conta/{contaId}")
+    public ResponseEntity<List<Transacao>> listarTransacoesPorCategoriaEValor(@PathVariable Long contaId, Long categoriaId){
+        List<Transacao> transacoes = transacaoRepo.findByContaIdAndCategoriaIdOrderByValorDesc(contaId, categoriaId);
+        return ResponseEntity.ok(transacoes);
+    }
+    @GetMapping("/conta/{contaId}")
+    public ResponseEntity<List<Transacao>> listarTransacoesValorEspecifico(@PathVariable Long contaId, BigDecimal valor){
+        List<Transacao> transacoes = transacaoRepo.findByContaIdAndValorGreaterThanEqual(contaId, valor);
+        return ResponseEntity.ok(transacoes);
+    }
+
 }
