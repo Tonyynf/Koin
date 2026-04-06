@@ -1,5 +1,8 @@
 package com.project.services;
 
+import com.project.dto.TransacaoDTO;
+import com.project.dto.TransacaoRequestDTO;
+import com.project.dto.TransacaoResponseDTO;
 import com.project.models.Conta;
 import com.project.models.TipoTransacao;
 import com.project.models.Transacao;
@@ -55,4 +58,43 @@ public class TransacaoService {
     public List<Transacao> listarTransacoesValorEspecifico(Long contaId, BigDecimal valor){
         return transacaoRepository.findByContaIdAndValorGreaterThanEqual(contaId, valor);
     }
+
+    private TransacaoRequestDTO converterParaRequestDto(Transacao t) {
+        return new TransacaoRequestDTO(
+                t.getDescricao(),
+                t.getValor(),
+                t.getTipo(),
+                t.getConta().getId(),
+                t.getCategoria().getId()
+        );
+    }
+
+    private TransacaoResponseDTO converterParaResponseDto(Transacao t) {
+        return new TransacaoResponseDTO(
+                t.getId(),
+                t.getDescricao(),
+                t.getValor(),
+                t.getTipo(),
+                t.getData(),
+                t.getCategoria().getNomeCategoria()
+        );
+    }
+
+    public List<TransacaoResponseDTO> buscarExtrato(Long contaId, BigDecimal min) {
+        List<Transacao> listaDoBanco;
+
+        if (min == null) {
+            // Busca simples por conta
+            listaDoBanco = transacaoRepository.findByContaIdAndOrderByDataDesc(contaId);
+        } else {
+            // Busca com filtro de valor mínimo
+            listaDoBanco = transacaoRepository.findByContaIdAndValorGreaterThanEqual(contaId, min);
+        }
+
+        // A mágica do Stream: transforma cada Transacao em TransacaoDTO
+        return listaDoBanco.stream()
+                .map(this::converterParaDto)
+                .toList();
+    }
+
 }
