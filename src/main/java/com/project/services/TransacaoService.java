@@ -1,6 +1,5 @@
 package com.project.services;
 
-import com.project.dto.TransacaoDTO;
 import com.project.dto.TransacaoRequestDTO;
 import com.project.dto.TransacaoResponseDTO;
 import com.project.models.Conta;
@@ -76,7 +75,8 @@ public class TransacaoService {
                 t.getValor(),
                 t.getTipo(),
                 t.getData(),
-                t.getCategoria().getNomeCategoria()
+                t.getCategoria().getNome(),
+                t.getConta().getNome()
         );
     }
 
@@ -93,7 +93,7 @@ public class TransacaoService {
 
         // A mágica do Stream: transforma cada Transacao em TransacaoDTO
         return listaDoBanco.stream()
-                .map(this::converterParaDto)
+                .map(this::converterParaResponseDto)
                 .toList();
     }
 
