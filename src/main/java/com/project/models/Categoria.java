@@ -15,7 +15,7 @@ public class Categoria {
     private Long id;
 
     @Column(nullable = false)
-    private String conta;
+    private String nome;
 
     @Column(nullable = false)
     private BigDecimal limiteMensal; // Sabendo se ultrapassou ou não o limite mensal...
