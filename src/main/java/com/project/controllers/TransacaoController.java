@@ -1,6 +1,7 @@
 package com.project.controllers;
 
-import com.project.dto.TransacaoDTO;
+import com.project.dto.TransacaoResponseDTO;
+import com.project.dto.TransacaoRequestDTO;
 import com.project.models.Categoria;
 import com.project.models.Conta;
 import com.project.models.Transacao;
@@ -18,7 +19,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/transacoes")
 public class TransacaoController {
-
     private final TransacaoService transacaoService;
     private final ContaRepository contaRepo;
     private final CategoriaRepository catRepo;
@@ -47,7 +47,7 @@ public class TransacaoController {
     }
 
     @PostMapping
-    public ResponseEntity<Transacao> criarTransacao(@RequestBody TransacaoDTO dados){
+    public ResponseEntity<Transacao> criarTransacao(@RequestBody TransacaoRequestDTO dados){
         Conta conta = contaRepo.findById(dados.contaId()).orElseThrow(() -> new RuntimeException("Conta não encontrada!"));
 
         Categoria categoria = catRepo.findById(dados.categoriaId()).orElseThrow(() -> new RuntimeException("Categoria não encontrada!"));
