@@ -1,7 +1,7 @@
 package com.project.controllers;
 
-import com.project.dto.TransacaoResponseDTO;
 import com.project.dto.TransacaoRequestDTO;
+import com.project.dto.TransacaoResponseDTO;
 import com.project.models.Categoria;
 import com.project.models.Conta;
 import com.project.models.Transacao;
@@ -9,8 +9,12 @@ import com.project.repositories.CategoriaRepository;
 import com.project.repositories.ContaRepository;
 import com.project.repositories.TransacaoRepository;
 import com.project.services.TransacaoService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,84 +22,66 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/transacoes")
+@RequiredArgsConstructor
 public class TransacaoController {
     private final TransacaoService transacaoService;
     private final ContaRepository contaRepo;
     private final CategoriaRepository catRepo;
     private final TransacaoRepository transacaoRepo;
 
-    public TransacaoController(TransacaoService transacaoService,
-                               ContaRepository contaRepo,
-                               CategoriaRepository catRepo,
-                               TransacaoRepository transacaoRepo) {
-        this.transacaoService = transacaoService;
-        this.contaRepo = contaRepo;
-        this.catRepo = catRepo;
-        this.transacaoRepo = transacaoRepo;
-    }
-    @GetMapping("/saldo/{id}")
-    public ResponseEntity<Map<String, Object>> getSaldoReal(@PathVariable Long id) {
-        BigDecimal saldo = transacaoService.CalcularValorReal(id);
-
-        Map<String, Object> resposta = Map.of(
-                "contaId", id,
-                "saldo", saldo,
-                "status","sucesso"
-        );
-
-        return ResponseEntity.ok(resposta);
-    }
-
-    @PostMapping
-    public ResponseEntity<Transacao> criarTransacao(@RequestBody TransacaoRequestDTO dados){
-        Conta conta = contaRepo.findById(dados.contaId()).orElseThrow(() -> new RuntimeException("Conta não encontrada!"));
-
-        Categoria categoria = catRepo.findById(dados.categoriaId()).orElseThrow(() -> new RuntimeException("Categoria não encontrada!"));
-
-        Transacao novaTransacao = new Transacao(
-          null,
-          dados.descricao(),
-          dados.valor(),
-          LocalDateTime.now(),
-          dados.tipo(),
-          conta,
-          categoria
-        );
-
-        return ResponseEntity.ok(transacaoRepo.save(novaTransacao));
-    }
-
     @GetMapping
     public List<Transacao> findAll() {
-        return transacaoService.buscarTransacoes();
+        return transacaoService.findAllTransacoes();
+    }
+    @PostMapping
+    public ResponseEntity<Transacao> createTransacao(@RequestBody TransacaoRequestDTO transacaoRequestDTO){
+        return transacaoService.createTransacao(transacaoRequestDTO);
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<Transacao> updateTransacao(@PathVariable Long id, @RequestBody TransacaoRequestDTO transacaoRequestDTO) {
+        return transacaoService.updateTransacao(id, transacaoRequestDTO);
+    }
+    @DeleteMapping("/{id}")
+    public void deleteTransacao(@PathVariable Long id){
+        transacaoService.deleteTransacao(id);
     }
 
-    @GetMapping("/conta/{contaId}")
-    public ResponseEntity<List<Transacao>> buscarPorConta(@PathVariable Long contaId){
-        List<Transacao> transacoes = transacaoRepo.findByContaId(contaId);
-        return ResponseEntity.ok(transacoes);
-    }
 
-    @GetMapping("/categoria/{categoriaId}")
-    public ResponseEntity<List<Transacao>> buscarPorCategoria(@PathVariable Long categoriaId){
-        List<Transacao> transacoes = transacaoRepo.findByContaId(categoriaId);
-        return ResponseEntity.ok(transacoes);
-    }
-
-    @GetMapping("/conta/{contaId}")
-    public ResponseEntity<List<Transacao>> listarTransacoesPorData(@PathVariable Long contaId){
-        List<Transacao> transacoes = transacaoRepo.findByContaIdAndOrderByDataDesc(contaId);
-        return ResponseEntity.ok(transacoes);
-    }
-    @GetMapping("/conta/{contaId}")
-    public ResponseEntity<List<Transacao>> listarTransacoesPorCategoriaEValor(@PathVariable Long contaId, Long categoriaId){
-        List<Transacao> transacoes = transacaoRepo.findByContaIdAndCategoriaIdOrderByValorDesc(contaId, categoriaId);
-        return ResponseEntity.ok(transacoes);
-    }
-    @GetMapping("/conta/{contaId}")
-    public ResponseEntity<List<Transacao>> listarTransacoesValorEspecifico(@PathVariable Long contaId, BigDecimal valor){
-        List<Transacao> transacoes = transacaoRepo.findByContaIdAndValorGreaterThanEqual(contaId, valor);
-        return ResponseEntity.ok(transacoes);
-    }
-
+//    @GetMapping("/saldo/{id}")
+//    public ResponseEntity<Map<String, Object>> ConsultarSaldoReal(@PathVariable Long id) {
+//        BigDecimal saldo = transacaoService.CalcularValorReal(id);
+//
+//        Map<String, Object> resposta = Map.of(
+//                "contaId", id,
+//                "saldo", saldo,
+//                "status","sucesso"
+//        );
+//
+//        return ResponseEntity.ok(resposta);
+//    }
+//    @GetMapping("/categoria/{categoriaId}")
+//    public ResponseEntity<List<Transacao>> buscarPorCategoria(@PathVariable Long categoriaId){
+//        List<Transacao> transacoes = transacaoRepo.findByContaId(categoriaId);
+//        return ResponseEntity.ok(transacoes);
+//    }
+//    @GetMapping("/conta/{contaId}")
+//    public ResponseEntity<List<Transacao>> buscarPorConta(@PathVariable Long contaId){
+//        List<Transacao> transacoes = transacaoRepo.findByContaId(contaId);
+//        return ResponseEntity.ok(transacoes);
+//    }
+//    @GetMapping("/conta/{contaId}")
+//    public ResponseEntity<List<Transacao>> listarTransacoesPorData(@PathVariable Long contaId){
+//        List<Transacao> transacoes = transacaoRepo.findByContaIdOrderByDataDesc(contaId);
+//        return ResponseEntity.ok(transacoes);
+//    }
+//    @GetMapping("/conta/{contaId}")
+//    public ResponseEntity<List<Transacao>> listarTransacoesPorCategoriaEValor(@PathVariable Long contaId, Long categoriaId){
+//        List<Transacao> transacoes = transacaoRepo.findByContaIdAndCategoriaIdOrderByValorDesc(contaId, categoriaId);
+//        return ResponseEntity.ok(transacoes);
+//    }
+//    @GetMapping("/conta/{contaId}")
+//    public ResponseEntity<List<Transacao>> listarTransacoesValorEspecifico(@PathVariable Long contaId, BigDecimal valor){
+//        List<Transacao> transacoes = transacaoRepo.findByContaIdAndValorGreaterThanEqual(contaId, valor);
+//        return ResponseEntity.ok(transacoes);
+//    }
 }

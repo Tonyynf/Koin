@@ -29,8 +29,9 @@ public class KoinApplication {
 			contaRepo.save(minhaConta);
 
 			//Categoria catGeral = new Categoria(null, "Geral",new BigDecimal("1000.00") ,"#000");
+
 			Categoria catGeral = new Categoria();
-			catGeral.setConta("Geral"); // Nome da categoria
+			catGeral.setNome("Geral");
 			catGeral.setLimiteMensal(new BigDecimal("1000.00"));
 			catGeral.setCorHex("#000");
 			catRepo.save(catGeral);

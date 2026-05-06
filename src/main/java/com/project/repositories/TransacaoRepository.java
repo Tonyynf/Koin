@@ -19,7 +19,7 @@ public interface TransacaoRepository extends JpaRepository<Transacao, Long>{
 
     List<Transacao> findByCategoriaId(Long CategoriaId);
 
-    List<Transacao> findByContaIdAndOrderByDataDesc(Long contaId);
+    List<Transacao> findByContaIdOrderByDataDesc(Long contaId);
 
     List<Transacao> findByContaIdAndCategoriaIdOrderByValorDesc(Long contaId, Long categoriaId);
 
