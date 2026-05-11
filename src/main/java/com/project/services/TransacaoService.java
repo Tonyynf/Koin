@@ -25,7 +25,7 @@ public class TransacaoService {
     private final ContaRepository contaRepository;
     private final TransacaoRepository transacaoRepository;
 
-    public ResponseEntity<Transacao> createTransacao(@RequestBody TransacaoRequestDTO dados){
+    public TransacaoResponseDTO createTransacao(TransacaoRequestDTO dados){
         Conta conta = contaRepository.findById(dados.contaId()).orElseThrow(() -> new RuntimeException("Conta não encontrada!"));
 
         Categoria categoria = categoriaRepository.findById(dados.categoriaId()).orElseThrow(() -> new RuntimeException("Categoria não encontrada!"));
@@ -40,14 +40,24 @@ public class TransacaoService {
                 categoria
         );
 
-        return ResponseEntity.ok(transacaoRepository.save(novaTransacao));
+        return converterParaResponseDto(transacaoRepository.save(novaTransacao));
     }
 
-    public List<Transacao> findAllTransacoes(){
-        return transacaoRepository.findAll();
+    public List<TransacaoResponseDTO> findAllTransacoes(){
+        return transacaoRepository.findAll()
+                .stream()
+                .map(this::converterParaResponseDto)
+                .toList();
     }
 
-    public ResponseEntity<Transacao> updateTransacao(Long id, TransacaoRequestDTO transacaoRequestDTO){
+    public TransacaoResponseDTO findTransacao(Long id){
+        Transacao transacao = transacaoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Transação não encontrada!"));;
+
+        return converterParaResponseDto(transacao);
+    }
+
+    public TransacaoResponseDTO updateTransacao(Long id, TransacaoRequestDTO transacaoRequestDTO){
         Transacao transacaoExistente = transacaoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Transação não encontrada!"));
 
@@ -63,7 +73,7 @@ public class TransacaoService {
         transacaoExistente.setConta(conta);
         transacaoExistente.setCategoria(categoria);
 
-        return ResponseEntity.ok(transacaoRepository.save(transacaoExistente));
+        return converterParaResponseDto(transacaoRepository.save(transacaoExistente));
     }
 
     public void deleteTransacao(Long id){
@@ -74,24 +84,6 @@ public class TransacaoService {
         transacaoRepository.deleteById(id);
     }
 
-
-//    public List<TransacaoResponseDTO> buscarExtrato(Long contaId, BigDecimal min) {
-//        List<Transacao> listaDoBanco;
-//
-//        if (min == null) {
-//            // Busca simples por conta
-//            listaDoBanco = transacaoRepository.findByContaIdOrderByDataDesc(contaId);
-//        } else {
-//            // Busca com filtro de valor mínimo
-//            listaDoBanco = transacaoRepository.findByContaIdAndValorGreaterThanEqual(contaId, min);
-//        }
-//
-//        // A mágica do Stream: transforma cada Transacao em TransacaoDTO
-//        return listaDoBanco.stream()
-//                .map(this::converterParaResponseDto)
-//                .toList();
-//    }
-//
     public BigDecimal CalcularValorReal(Long contaId){
         Conta conta = contaRepository.findById(contaId).orElseThrow();
 
@@ -104,32 +96,13 @@ public class TransacaoService {
 
         return conta.getSaldoInicial().add(totalEntradas).subtract(totalSaidas);
     }
-//
-//    public List<Transacao> buscaPorConta(Long contaId) {
-//        return transacaoRepository.findByContaId(contaId);
-//    }
-//    public List<Transacao> buscaPorCategoria(Long categoriaId){
-//        return transacaoRepository.findByCategoriaId(categoriaId);
-//    }
-//
-//    public List<Transacao> listarTransacoesPorData(Long contaId){
-//        return transacaoRepository.findByContaIdOrderByDataDesc(contaId);
-//    }
-//    public List<Transacao> listarTransacoesPorCategoriaEValor(Long contaId, Long categoriaId) {
-//        return transacaoRepository.findByContaIdAndCategoriaIdOrderByValorDesc(contaId, categoriaId);
-//    }
-//    public List<Transacao> listarTransacoesValorEspecifico(Long contaId, BigDecimal valor){
-//        return transacaoRepository.findByContaIdAndValorGreaterThanEqual(contaId, valor);
-//    }
-//
-//    private TransacaoRequestDTO converterParaRequestDto(Transacao t) {
-//        return new TransacaoRequestDTO(
-//                t.getDescricao(),
-//                t.getValor(),
-//                t.getTipo(),
-//                t.getConta().getId(),
-//                t.getCategoria().getId()
-//        );
-//    }
-//
+
+    //converter requisição para DTO
+    private TransacaoResponseDTO converterParaResponseDto(Transacao t) {
+        return new TransacaoResponseDTO(
+                t.getId(), t.getDescricao(), t.getValor(),
+                t.getTipo(), t.getData(),
+                t.getCategoria().getNome(), t.getConta().getNome()
+        );
+    }
 }
