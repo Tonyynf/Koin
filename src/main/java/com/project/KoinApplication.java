@@ -28,12 +28,7 @@ public class KoinApplication {
 			Conta minhaConta = new Conta(null, "Carteira", new BigDecimal("100.00"));
 			contaRepo.save(minhaConta);
 
-			//Categoria catGeral = new Categoria(null, "Geral",new BigDecimal("1000.00") ,"#000");
-
-			Categoria catGeral = new Categoria();
-			catGeral.setNome("Geral");
-			catGeral.setLimiteMensal(new BigDecimal("1000.00"));
-			catGeral.setCorHex("#000");
+			Categoria catGeral = new Categoria(null, "Geral",new BigDecimal("1000.00") ,"#000");
 			catRepo.save(catGeral);
 
 			Transacao r1 = new Transacao(null, "Salário", new BigDecimal("50.00"), LocalDateTime.now(), TipoTransacao.RECEITA, minhaConta, catGeral);
