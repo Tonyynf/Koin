@@ -13,9 +13,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TransacaoController {
     private final TransacaoService transacaoService;
-    private final ContaRepository contaRepo;
-    private final CategoriaRepository catRepo;
-    private final TransacaoRepository transacaoRepo;
 
     @GetMapping
     public ResponseEntity<List<TransacaoResponseDTO>> findAllTransacoes() {
@@ -26,8 +23,8 @@ public class TransacaoController {
         return ResponseEntity.ok(transacaoService.findTransacao(id));
     }
     @PostMapping
-    public ResponseEntity<Transacao> createTransacao(@RequestBody TransacaoRequestDTO transacaoRequestDTO){
-        return transacaoService.createTransacao(transacaoRequestDTO);
+    public ResponseEntity<TransacaoResponseDTO> createTransacao(@RequestBody TransacaoRequestDTO transacaoRequestDTO){
+        return ResponseEntity.ok(transacaoService.createTransacao(transacaoRequestDTO));
     }
     @PutMapping("/{id}")
     public ResponseEntity<TransacaoResponseDTO> updateTransacao(@PathVariable Long id, @RequestBody TransacaoRequestDTO transacaoRequestDTO) {
