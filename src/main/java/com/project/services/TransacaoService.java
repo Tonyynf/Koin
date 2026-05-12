@@ -10,10 +10,7 @@ import com.project.repositories.CategoriaRepository;
 import com.project.repositories.ContaRepository;
 import com.project.repositories.TransacaoRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
