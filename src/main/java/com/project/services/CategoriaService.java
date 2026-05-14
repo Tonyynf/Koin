@@ -2,6 +2,7 @@ package com.project.services;
 
 import com.project.dto.CategoriaRequestDTO;
 import com.project.dto.CategoriaResponseDTO;
+import com.project.exceptions.*;
 import com.project.models.Categoria;
 import com.project.repositories.CategoriaRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,10 @@ public class CategoriaService {
     private final CategoriaRepository categoriaRepository;
 
     public CategoriaResponseDTO createCategoria(CategoriaRequestDTO dados){
+        if(categoriaRepository.existsByNome(dados.nome())) {
+            throw new DuplicateResourceException("Já existe uma categoria com o nome: " + dados.nome());
+        }
+
         Categoria novaCategoria = new Categoria(
                 null,
                 dados.nome(),
@@ -34,14 +39,14 @@ public class CategoriaService {
 
     public CategoriaResponseDTO findCategoria(Long id){
         Categoria categoria = categoriaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada"));
 
         return converterParaResponseDto(categoria);
     }
 
     public CategoriaResponseDTO updateCategoria(Long id, CategoriaRequestDTO categoriaRequestDTO){
         Categoria categoriaExistente = categoriaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoria não encontrada!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada!"));
 
         categoriaExistente.setNome(categoriaRequestDTO.nome());
         categoriaExistente.setLimiteMensal(categoriaRequestDTO.limiteMensal());
@@ -53,7 +58,7 @@ public class CategoriaService {
 
     public void deleteCategoria(Long id){
         if (!categoriaRepository.existsById(id)) {
-            throw new RuntimeException("Categoria não encontrada para exclusão!");
+            throw new ResourceNotFoundException("Categoria não encontrada para exclusão!");
         }
 
         categoriaRepository.deleteById(id);

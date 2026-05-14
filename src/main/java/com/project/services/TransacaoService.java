@@ -2,6 +2,7 @@ package com.project.services;
 
 import com.project.dto.TransacaoRequestDTO;
 import com.project.dto.TransacaoResponseDTO;
+import com.project.exceptions.*;
 import com.project.models.Categoria;
 import com.project.models.Conta;
 import com.project.models.TipoTransacao;
@@ -23,9 +24,9 @@ public class TransacaoService {
     private final TransacaoRepository transacaoRepository;
 
     public TransacaoResponseDTO createTransacao(TransacaoRequestDTO dados){
-        Conta conta = contaRepository.findById(dados.contaId()).orElseThrow(() -> new RuntimeException("Conta não encontrada!"));
+        Conta conta = contaRepository.findById(dados.contaId()).orElseThrow(() -> new ResourceNotFoundException("Conta não encontrada!"));
 
-        Categoria categoria = categoriaRepository.findById(dados.categoriaId()).orElseThrow(() -> new RuntimeException("Categoria não encontrada!"));
+        Categoria categoria = categoriaRepository.findById(dados.categoriaId()).orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada!"));
 
         Transacao novaTransacao = new Transacao(
                 null,
@@ -49,20 +50,20 @@ public class TransacaoService {
 
     public TransacaoResponseDTO findTransacao(Long id){
         Transacao transacao = transacaoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Transação não encontrada!"));;
+                .orElseThrow(() -> new ResourceNotFoundException("Transação não encontrada!"));;
 
         return converterParaResponseDto(transacao);
     }
 
     public TransacaoResponseDTO updateTransacao(Long id, TransacaoRequestDTO transacaoRequestDTO){
         Transacao transacaoExistente = transacaoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Transação não encontrada!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Transação não encontrada!"));
 
         Conta conta = contaRepository.findById(transacaoRequestDTO.contaId())
-                .orElseThrow(() -> new RuntimeException("Conta não encontrada!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Conta não encontrada!"));
 
         Categoria categoria = categoriaRepository.findById(transacaoRequestDTO.categoriaId())
-                .orElseThrow(() -> new RuntimeException("Categoria não encontrada!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada!"));
 
         transacaoExistente.setDescricao(transacaoRequestDTO.descricao());
         transacaoExistente.setValor(transacaoRequestDTO.valor());
@@ -75,14 +76,14 @@ public class TransacaoService {
 
     public void deleteTransacao(Long id){
         if (!transacaoRepository.existsById(id)) {
-            throw new RuntimeException("Transação não encontrada para exclusão!");
+            throw new ResourceNotFoundException("Transação não encontrada para exclusão!");
         }
 
         transacaoRepository.deleteById(id);
     }
 
     public BigDecimal CalcularValorReal(Long contaId){
-        Conta conta = contaRepository.findById(contaId).orElseThrow();
+        Conta conta = contaRepository.findById(contaId).orElseThrow(() -> new ResourceNotFoundException("Conta não encontrada!"));
 
         BigDecimal entradas = transacaoRepository.somarPorTipoEConta(TipoTransacao.RECEITA, contaId);
 
