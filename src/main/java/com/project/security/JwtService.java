@@ -11,7 +11,7 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    private static final String SECRET ="minha-chave-para-do-projeto";
+    private static final String SECRET = "koin-secret-key-must-be-at-least-256-bits-long-for-hmac";
 
     public String gerarToken(String email){
         return Jwts.builder()
