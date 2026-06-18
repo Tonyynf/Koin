@@ -22,8 +22,6 @@ export default function Login() {
    <div
      style={{
        minHeight: "100vh",
-       background:
-         "linear-gradient(135deg, #070738 0%, #111184 50%, #3C3CE8 100%)",
        display: "flex",
        justifyContent: "center",
        alignItems: "center",
@@ -43,7 +41,8 @@ export default function Login() {
        <h2 style={{
            textAlign: "center",
            color: "#7373FF",
-           marginBottom: 24,
+           marginBottom: 22,
+           fontSize: "35px"
          }}
        >
          Login
@@ -68,6 +67,7 @@ export default function Login() {
          value={email}
          onChange={(e) => setEmail(e.target.value)}
          style={{
+            marginBottom: 14,
             width: "100%",
             boxSizing: "border-box",
             padding: 12,
@@ -84,6 +84,7 @@ export default function Login() {
          value={senha}
          onChange={(e) => setSenha(e.target.value)}
          style={{
+            marginBottom: 20,
             width: "100%",
             boxSizing: "border-box",
             padding: 12,

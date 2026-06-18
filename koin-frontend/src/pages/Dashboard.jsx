@@ -55,6 +55,35 @@ export default function Dashboard() {
     carregarDados();
   };
 
+const [formConta, setFormConta] = useState({ nome: "", saldoInicial: "" });
+const [formCategoria, setFormCategoria] = useState({ nome: "", limiteMensal: "", corHex: "#000000" });
+
+const handleSubmitConta = async () => {
+  try {
+    await api.post("/api/contas", {
+      ...formConta,
+      saldoInicial: parseFloat(formConta.saldoInicial),
+    });
+    setFormConta({ nome: "", saldoInicial: "" });
+    carregarDados();
+  } catch (e) {
+    alert("Erro ao adicionar conta");
+  }
+};
+
+const handleSubmitCategoria = async () => {
+  try {
+    await api.post("/api/categorias", {
+      ...formCategoria,
+      limiteMensal: parseFloat(formCategoria.limiteMensal),
+    });
+    setFormCategoria({ nome: "", limiteMensal: "", corHex: "#000000" });
+    carregarDados();
+  } catch (e) {
+    alert("Erro ao adicionar categoria");
+  }
+};
+
   return (
     <div
       style={{
@@ -75,7 +104,7 @@ export default function Dashboard() {
           marginBottom: 24,
         }}
       >
-        <h2 style={{ margin: 0, color: "#7373FF" }}>Dashboard</h2>
+        <h2 style={{ margin: 0, color: "#FFFFFF" , fontSize: "40px"}}>Dashboard</h2>
 
         <button
           onClick={handleLogout}
@@ -92,7 +121,7 @@ export default function Dashboard() {
         </button>
       </div>
 
-      <h3 style={{ color: "#7373FF" }}>Nova Transação</h3>
+      <h3 style={{ color: "#E0E0E0" }}>Nova Transação</h3>
 
       <div
         style={{
@@ -208,7 +237,98 @@ export default function Dashboard() {
         </button>
       </div>
 
-      <h3 style={{ color: "#7373FF" }}>Transações</h3>
+    <h3 style={{color: "#E0E0E0"}} >Nova Conta</h3>
+    <div style={{
+        display: "flex",
+        gap: 8,
+        flexWrap: "wrap",
+        marginBottom: 24
+        }}>
+
+      <input name="nome" placeholder="Nome da conta" value={formConta.nome}
+        onChange={(e) => setFormConta({ ...formConta, nome: e.target.value })}
+        style={{
+            padding: 10,
+                        flex: 1,
+                        borderRadius: 8,
+                        border: "1px solid #3C3CE8",
+                        background: "#111184",
+                        color: "#fff",
+                        }}
+            />
+
+      <input name="saldoInicial" placeholder="Saldo inicial" type="number" value={formConta.saldoInicial}
+        onChange={(e) => setFormConta({ ...formConta, saldoInicial: e.target.value })}
+        style={{
+            padding: 10,
+                        flex: 1,
+                        borderRadius: 8,
+                        border: "1px solid #3C3CE8",
+                        background: "#111184",
+                        color: "#fff",
+            }}
+        />
+
+      <button onClick={handleSubmitConta} style={{ background: "#3C3CE8",
+                                                               color: "#fff",
+                                                               border: "none",
+                                                               padding: "10px 20px",
+                                                               borderRadius: 8,
+                                                               cursor: "pointer",
+                                                               fontWeight: "bold",}}>Adicionar</button>
+    </div>
+
+    <h3 style={{color: "#E0E0E0"}}>Nova Categoria</h3>
+    <div style={{
+        display: "flex",
+        gap: 8,
+        flexWrap: "wrap",
+        marginBottom: 24
+         }}>
+
+      <input name="nome" placeholder="Nome da categoria" value={formCategoria.nome}
+        onChange={(e) => setFormCategoria({ ...formCategoria, nome: e.target.value })}
+        style={{
+           padding: 10,
+                       flex: 1,
+                       borderRadius: 8,
+                       border: "1px solid #3C3CE8",
+                       background: "#111184",
+                       color: "#fff",
+            }}/>
+
+      <input name="limiteMensal" placeholder="Limite mensal" type="number" value={formCategoria.limiteMensal}
+        onChange={(e) => setFormCategoria({ ...formCategoria, limiteMensal: e.target.value })}
+        style={{
+            padding: 10,
+                        flex: 1,
+                        borderRadius: 8,
+                        border: "1px solid #3C3CE8",
+                        background: "#111184",
+                        color: "#fff",
+           }}/>
+
+      <input name="corHex" type="color" value={formCategoria.corHex}
+        onChange={(e) => setFormCategoria({ ...formCategoria, corHex: e.target.value })}
+        style={{
+            padding: 10,
+                        flex: 1,
+                        borderRadius: 8,
+                        border: "1px solid #3C3CE8",
+                        background: "#111184",
+                        color: "#fff",
+            }}/>
+
+      <button onClick={handleSubmitCategoria} style={{background: "#3C3CE8",
+                                                                  color: "#fff",
+                                                                  border: "none",
+                                                                  padding: "10px 20px",
+                                                                  borderRadius: 8,
+                                                                  cursor: "pointer",
+                                                                  fontWeight: "bold", }}>Adicionar</button>
+    </div>
+
+      <h3 style={{ color: "#E0E0E0"  }}>Transações</h3>
 
       <table
         style={{
@@ -237,29 +357,30 @@ export default function Dashboard() {
                 borderBottom: "1px solid rgba(115,115,255,0.2)",
               }}
             >
-              <td style={{ padding: 12 }}>{t.descricao}</td>
+              <td style={{ textAlign: "center", padding: 12 }}>{t.descricao}</td>
 
               <td
                 style={{
                   padding: 12,
                   color: t.tipo === "RECEITA" ? "#4ADE80" : "#F87171",
                   fontWeight: "bold",
+                  textAlign: "center",
                 }}
               >
                 R$ {t.valor}
               </td>
 
-              <td style={{ padding: 12 }}>{t.tipo}</td>
+              <td style={{ textAlign: "center", padding: 12 }}>{t.tipo}</td>
 
-              <td style={{ padding: 12 }}>
+              <td style={{ textAlign: "center", padding: 12 }}>
                 {new Date(t.data).toLocaleDateString("pt-BR")}
               </td>
 
-              <td style={{ padding: 12 }}>
+              <td style={{ textAlign: "center", padding: 12 }}>
                 <button
                   onClick={() => handleDelete(t.id)}
                   style={{
-                    background: "#7373FF",
+                    background: "#DB0000",
                     color: "#fff",
                     border: "none",
                     padding: "8px 14px",

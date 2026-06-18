@@ -23,8 +23,6 @@ export default function Register() {
       <div
       style={{
         minHeight: "100vh",
-        background:
-          "linear-gradient(135deg, #070738 0%, #111184 50%, #3C3CE8 100%)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -46,6 +44,7 @@ export default function Register() {
             textAlign: "center",
             color: "#7373FF",
             marginBottom: 24,
+            fontSize: "35px"
           }}
         >
           Cadastro
@@ -70,13 +69,14 @@ export default function Register() {
           value={nome}
           onChange={(e) => setNome(e.target.value)}
           style={{
-            width: "100%",
-            padding: 12,
-            marginBottom: 12,
-            borderRadius: 8,
-            border: "1px solid #3C3CE8",
-            background: "#070738",
-            color: "#fff",
+             marginBottom: 14,
+             width: "100%",
+             boxSizing: "border-box",
+             padding: 12,
+             borderRadius: 8,
+             border: "1px solid #3C3CE8",
+             background: "#070738",
+             color: "#fff",
           }}
         />
 
@@ -85,13 +85,14 @@ export default function Register() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           style={{
-            width: "100%",
-            padding: 12,
-            marginBottom: 12,
-            borderRadius: 8,
-            border: "1px solid #3C3CE8",
-            background: "#070738",
-            color: "#fff",
+             marginBottom: 14,
+             width: "100%",
+             boxSizing: "border-box",
+             padding: 12,
+             borderRadius: 8,
+             border: "1px solid #3C3CE8",
+             background: "#070738",
+             color: "#fff",
           }}
         />
 
@@ -101,13 +102,14 @@ export default function Register() {
           value={senha}
           onChange={(e) => setSenha(e.target.value)}
           style={{
-            width: "100%",
-            padding: 12,
-            marginBottom: 20,
-            borderRadius: 8,
-            border: "1px solid #3C3CE8",
-            background: "#070738",
-            color: "#fff",
+             marginBottom: 20,
+             width: "100%",
+             boxSizing: "border-box",
+             padding: 12,
+             borderRadius: 8,
+             border: "1px solid #3C3CE8",
+             background: "#070738",
+             color: "#fff",
           }}
         />
 
